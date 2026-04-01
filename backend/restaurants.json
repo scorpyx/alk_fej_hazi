@@ -1,0 +1,242 @@
+[
+  {
+    "name": "Mazel Tov",
+    "location": "Budapest, Akácfa u. 47, 1073",
+    "bookings": [],
+    "open_at": 12,
+    "close_at": 23,
+    "table_size_counts": {
+      "2": 2,
+      "4": 2,
+      "10": 2
+    }
+  },
+  {
+    "name": "Fat Mama",
+    "location": "Budapest, Kazinczy u. 24, 1075",
+    "bookings": [],
+    "open_at": 12,
+    "close_at": 23,
+    "table_size_counts": {
+      "2": 2,
+      "4": 2,
+      "10": 2
+    }
+  },
+  {
+    "name": "Hungarikum Bisztró",
+    "location": "Budapest, Steindl Imre u. 13, 1051",
+    "bookings": [],
+    "open_at": 12,
+    "close_at": 23,
+    "table_size_counts": {
+      "2": 2,
+      "4": 2,
+      "10": 2
+    }
+  },
+  {
+    "name": "Aranybástya",
+    "location": "Budapest, Buda Castle, Csónak u. 1, 1015",
+    "bookings": [],
+    "open_at": 12,
+    "close_at": 23,
+    "table_size_counts": {
+      "2": 2,
+      "4": 2,
+      "10": 2
+    }
+  },
+  {
+    "name": "Parasztkonyha Restaurant",
+    "location": "Budapest, Október 6. u. 3, 1051",
+    "bookings": [],
+    "open_at": 12,
+    "close_at": 23,
+    "table_size_counts": {
+      "2": 2,
+      "4": 2,
+      "10": 2
+    }
+  },
+  {
+    "name": "Onyx",
+    "location": "Budapest, Vörösmarty tér 7-8, 1051",
+    "bookings": [],
+    "open_at": 12,
+    "close_at": 23,
+    "table_size_counts": {
+      "2": 2,
+      "4": 2,
+      "10": 2
+    }
+  },
+  {
+    "name": "Stand Étterem",
+    "location": "Budapest, Székely Mihály u. 2, 1061",
+    "bookings": [],
+    "open_at": 12,
+    "close_at": 23,
+    "table_size_counts": {
+      "2": 2,
+      "4": 2,
+      "10": 2
+    }
+  },
+  {
+    "name": "BIBO Budapest",
+    "location": "Budapest, Apáczai Csere János u. 11, 1051",
+    "bookings": [],
+    "open_at": 12,
+    "close_at": 23,
+    "table_size_counts": {
+      "2": 2,
+      "4": 2,
+      "10": 2
+    }
+  },
+  {
+    "name": "Essência Restaurant - Tiago & Éva",
+    "location": "Budapest, Sas u 17, 1051",
+    "bookings": [],
+    "open_at": 12,
+    "close_at": 23,
+    "table_size_counts": {
+      "2": 2,
+      "4": 2,
+      "10": 2
+    }
+  },
+  {
+    "name": "Hell's Kitchen – Hungarian Restaurant",
+    "location": "Budapest, Kígyó u. 4, 1052",
+    "bookings": [],
+    "open_at": 12,
+    "close_at": 23,
+    "table_size_counts": {
+      "2": 2,
+      "4": 2,
+      "10": 2
+    }
+  },
+  {
+    "name": "Paprika Vendéglő",
+    "location": "Budapest, Dózsa György út 72, 1071",
+    "bookings": [],
+    "open_at": 12,
+    "close_at": 23,
+    "table_size_counts": {
+      "2": 2,
+      "4": 2,
+      "10": 2
+    }
+  },
+  {
+    "name": "Parisi 6",
+    "location": "Budapest, Párizsi u. 6b, 1052",
+    "bookings": [],
+    "open_at": 12,
+    "close_at": 23,
+    "table_size_counts": {
+      "2": 2,
+      "4": 2,
+      "10": 2
+    }
+  },
+  {
+    "name": "Barack és Szilva étterem",
+    "location": "Budapest, Klauzál u. 13, 1072",
+    "bookings": [],
+    "open_at": 12,
+    "close_at": 23,
+    "table_size_counts": {
+      "2": 2,
+      "4": 2,
+      "10": 2
+    }
+  },
+  {
+    "name": "Restaurante Fuego",
+    "location": "Budapest, Kazinczy u. 3b, 1075",
+    "bookings": [],
+    "open_at": 12,
+    "close_at": 23,
+    "table_size_counts": {
+      "2": 2,
+      "4": 2,
+      "10": 2
+    }
+  },
+  {
+    "name": "TATI Farm to Table restaurant",
+    "location": "Budapest, Dohány u. 58-62, 1074",
+    "bookings": [],
+    "open_at": 12,
+    "close_at": 23,
+    "table_size_counts": {
+      "2": 2,
+      "4": 2,
+      "10": 2
+    }
+  },
+  {
+    "name": "Borkonyha Winekitchen",
+    "location": "Budapest, Sas u 3, 1051",
+    "bookings": [],
+    "open_at": 12,
+    "close_at": 23,
+    "table_size_counts": {
+      "2": 2,
+      "4": 2,
+      "10": 2
+    }
+  },
+  {
+    "name": "Costes Restaurant",
+    "location": "Budapest, Ráday u. 4, 1092",
+    "bookings": [],
+    "open_at": 12,
+    "close_at": 23,
+    "table_size_counts": {
+      "2": 2,
+      "4": 2,
+      "10": 2
+    }
+  },
+  {
+    "name": "Rezkakas Bistro",
+    "location": "Budapest, Sas u 3, 1051",
+    "bookings": [],
+    "open_at": 12,
+    "close_at": 23,
+    "table_size_counts": {
+      "2": 2,
+      "4": 2,
+      "10": 2
+    }
+  },
+  {
+    "name": "Comme Chez Soi",
+    "location": "Budapest, Aranykéz u. 2, 1051",
+    "bookings": [],
+    "open_at": 12,
+    "close_at": 23,
+    "table_size_counts": {
+      "2": 2,
+      "4": 2,
+      "10": 2
+    }
+  },
+  {
+    "name": "Zeller Bistro",
+    "location": "Budapest, Hercegprímás u. 18, 1051",
+    "bookings": [],
+    "open_at": 12,
+    "close_at": 23,
+    "table_size_counts": {
+      "2": 2,
+      "4": 2,
+      "10": 2
+    }
+  }
+]
