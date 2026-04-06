@@ -1,5 +1,5 @@
-import { Component, inject, signal } from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import { Component, inject, signal, effect, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { DatePickerModule } from 'primeng/datepicker';
 import { FormsModule } from '@angular/forms';
 import { RestaurantService } from '../restaurant-service';
@@ -16,56 +16,83 @@ export class Reservation {
   twoSeatTable = signal<any>(0);
   fourSeatTable = signal<any>(0);
   tenSeatTable = signal<any>(0);
-  date: Date | undefined;
+  date = new Date();
   restaurantId: string | null;
-  twoSeatSelected: boolean = false;
-  fourSeatSelected: boolean = false;
-  tenSeatSelected: boolean = false;
+  twoSeatSelected = false;
+  fourSeatSelected = false;
+  tenSeatSelected = false;
 
   private route = inject(ActivatedRoute);
   private restaurantService = inject(RestaurantService);
 
   constructor() {
-    this.restaurantId = this.route.snapshot.paramMap.get('id'); 
+    this.restaurantId = this.route.snapshot.paramMap.get('id');
+
+  }
+
+  ngOnInit() {
+    this.getAvailableSeats();
   }
 
   onSubmit(form: any) {
-        if (this.restaurantId != null && form.valid) {
-            const restaurants = this.restaurantService.getAvailableSeats(this.restaurantId, this.date);
-            if(restaurants != null) {
-              restaurants.subscribe(
-                {
-                  next: (data: any) => {
-                    console.log("yo");
-                    this.twoSeatTable.set(data["2"]);
-                    this.fourSeatTable.set(data["4"]);
-                    this.tenSeatTable.set(data["10"]);
-                  },
-                  error: (data: any) => {
-                    console.log(data);
-                  }
-                }
-              );
+    if (form.valid) {
+      this.getAvailableSeats();
+    }
+  }
+
+  onModelChange(event: any, form: any) {
+    console.log("event");
+    console.log(this.date);
+    console.log(event);
+    if(this.date.getFullYear() != event.getFullYear() || 
+      this.date.getMonth() != event.getMonth() || 
+      this.date.getDate() != event.getDate()) {
+        console.log("only date change");
+        form.ngSubmit.emit()
+    }
+      
+  }
+
+  twoSeatToggle() {
+    this.twoSeatSelected = !this.twoSeatSelected;
+    this.fourSeatSelected = false;
+    this.tenSeatSelected = false;
+  }
+
+  fourSeatToggle() {
+    this.fourSeatSelected = !this.fourSeatSelected;
+    this.twoSeatSelected = false;
+    this.tenSeatSelected = false;
+  }
+
+  tenSeatToggle() {
+    this.tenSeatSelected = !this.tenSeatSelected;
+    this.twoSeatSelected = false;
+    this.fourSeatSelected = false;
+  }
+
+  dateSelected() {
+
+  }
+
+  private getAvailableSeats() {
+    if (this.restaurantId != null) {
+      const restaurants = this.restaurantService.getAvailableSeats(this.restaurantId, this.date);
+      if (restaurants != null) {
+        restaurants.subscribe(
+          {
+            next: (data: any) => {
+              console.log("yo");
+              this.twoSeatTable.set(data["2"]);
+              this.fourSeatTable.set(data["4"]);
+              this.tenSeatTable.set(data["10"]);
+            },
+            error: (data: any) => {
+              console.log(data);
             }
-            form.resetForm();
-        }
+          }
+        );
+      }
     }
-
-    twoSeatToggle() {
-      this.twoSeatSelected = !this.twoSeatSelected;
-      this.fourSeatSelected = false;
-      this.tenSeatSelected = false;
-    }
-
-    fourSeatToggle() {
-      this.fourSeatSelected = !this.fourSeatSelected;
-      this.twoSeatSelected = false;
-      this.tenSeatSelected = false;
-    }
-
-    tenSeatToggle() {
-      this.tenSeatSelected = !this.tenSeatSelected;
-      this.twoSeatSelected = false;
-      this.fourSeatSelected = false;
-    }
+  }
 }
