@@ -1,0 +1,8 @@
+<div class="card flex justify-center">
+    <div class="flex-col gap-4">
+        <p >{{customer}}, your reservation is confirmed.</p>
+        <p>See you at {{time}} on {{date}}.</p>
+        <span>Click here if you want to cancel your reservation:</span>
+        <p-button label="Cancel" (onClick)="cancel()" link [style]="{color: 'red'}"/>
+    </div>
+</div>
