@@ -51,6 +51,9 @@ def available_tables(restaurant_id, date, time):
 @app.route("/restaurants/<string:restaurant_id>/bookings/<string:date>/booked-hours/<int:time>", methods=["DELETE"])
 def delete_booking(restaurant_id, date, time):
     customer_name = request.args.get('customer-name')
+    if customer_name is None:
+        return jsonify({"error": "customer-name is required"}), 400
+
     mongo.db.bookings.update_one({"restaurant_id": ObjectId(restaurant_id), "date": date}, { "$pull": {"booked_hours.{}".format(time): {"customer_name" : customer_name}}} )
     return '', 204
 
@@ -65,11 +68,11 @@ def update_booking(restaurant_id, date, time):
 
     bookings = mongo.db.bookings.find_one({"restaurant_id": ObjectId(restaurant_id), "date": date})
     if bookings is None:
-        return jsonify({"error": "Booking does not exist"})
+        return jsonify({"error": "Booking does not exist"}), 404
 
     booked_hour = bookings["booked_hours"][str(time)]
     if booked_hour is None:
-        return jsonify({"error": "Booking does not exist"})
+        return jsonify({"error": "Booking does not exist"}), 404
 
     if len(list(filter(lambda t: t["customer_name"] == customer_name, booked_hour))) == 0:
         return jsonify({"error": "You do not have a booking for that time."}), 400

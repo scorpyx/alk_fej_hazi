@@ -1,0 +1,49 @@
+@hostname=localhost
+@port=44320
+@host={{hostname}}:{{port}}
+@restaurant_id=69d8132c4597b90597a987f8
+@date=2026-04-09
+@time=22
+@customer_name=Tucker
+@new_date=2026-04-10
+@new_time=21
+
+GET http://{{host}}/restaurants
+
+###
+
+GET http://{{host}}/restaurants/{{restaurant_id}}
+
+###
+
+GET http://{{host}}/restaurants/{{restaurant_id}}/bookings
+
+###
+
+GET http://{{host}}/restaurants/{{restaurant_id}}/bookings/{{date}}/booked-hours/{{time}}/available
+
+###
+
+POST http://{{host}}/restaurants/{{restaurant_id}}/bookings/{{date}}/booked-hours/{{time}}
+Content-Type: application/json
+
+{
+    "customer_name": "{{customer_name}}",
+    "table_size": 2
+}
+
+###
+
+PUT http://{{host}}/restaurants/{{restaurant_id}}/bookings/{{date}}/booked-hours/{{time}}
+Content-Type: application/json
+
+{
+    "customer_name": "{{customer_name}}",
+    "table_size": 4,
+    "date": "{{new_date}}",
+    "time": "{{new_time}}"
+}
+
+###
+
+DELETE http://{{host}}/restaurants/{{restaurant_id}}/bookings/{{new_date}}/booked-hours/{{new_time}}?customer-name={{customer_name}}
