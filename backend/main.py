@@ -54,37 +54,79 @@ def delete_booking(restaurant_id, date, time):
     mongo.db.bookings.update_one({"restaurant_id": ObjectId(restaurant_id), "date": date}, { "$pull": {"booked_hours.{}".format(time): {"customer_name" : customer_name}}} )
     return '', 204
 
-@app.route("/restaurants/<string:restaurant_id>/bookings", methods=["POST"])
-def create_booking(restaurant_id):
-    restaurant = mongo.db.restaurants.find_one({"_id" : ObjectId(restaurant_id)}, {"name": 1, "open_at": 1, "close_at": 1, "table_size_counts": 1})
-    print(restaurant)
-    if restaurant is None:
-        return {"error": "Invalid offset or limit"}, 404
-
+@app.route("/restaurants/<string:restaurant_id>/bookings/<string:date>/booked-hours/<int:time>", methods=["PUT"])
+def update_booking(restaurant_id, date, time):
     requested_booking = request.get_json()
 
-    if requested_booking["time"] < 0 or requested_booking["time"] > 23:
+    customer_name = requested_booking['customer_name']
+    table_size = requested_booking['table_size']
+    new_date = requested_booking['date'] if 'date' in requested_booking else None
+    new_time = requested_booking['time'] if 'time' in requested_booking else None
+
+    bookings = mongo.db.bookings.find_one({"restaurant_id": ObjectId(restaurant_id), "date": date})
+    if bookings is None:
+        return jsonify({"error": "Booking does not exist"})
+
+    booked_hour = bookings["booked_hours"][str(time)]
+    if booked_hour is None:
+        return jsonify({"error": "Booking does not exist"})
+
+    if len(list(filter(lambda t: t["customer_name"] == customer_name, booked_hour))) == 0:
+        return jsonify({"error": "You do not have a booking for that time."}), 400
+
+    if new_date is not None:
+        bookings_for_new_date = mongo.db.bookings.find_one({"restaurant_id": ObjectId(restaurant_id), "date": new_date})
+        if bookings_for_new_date is None:
+            mongo.db.bookings.insert_one({ "restaurant_id": ObjectId(restaurant_id), "date" : new_date, "booked_hours" : {} })
+
+    if new_time is not None:
+        bookings_for_new_time = mongo.db.bookings.find_one({"restaurant_id": ObjectId(restaurant_id), "date": new_date or date,"booked_hours.{}".format(new_time): {"$exists": "true"}})
+        if bookings_for_new_time is None:
+            mongo.db.bookings.update_one({"restaurant_id": ObjectId(restaurant_id), "date": new_date or date}, {'$set': {'booked_hours.{}'.format(new_time): []}})
+
+
+    mongo.db.bookings.update_one({"restaurant_id": ObjectId(restaurant_id), "date": date}, { "$pull": {"booked_hours.{}".format(time): {"customer_name" : customer_name}}} )
+    mongo.db.bookings.update_one({"restaurant_id": ObjectId(restaurant_id), "date": new_date or date},
+                                 {"$push": {"booked_hours.{}".format(new_time or time): {"customer_name": customer_name, "table_size": table_size }}})
+
+    return '', 204
+
+@app.route("/restaurants/<string:restaurant_id>/bookings/<string:date>/booked-hours/<int:time>", methods=["POST"])
+def create_booking(restaurant_id, date, time):
+    restaurant = mongo.db.restaurants.find_one({"_id" : ObjectId(restaurant_id)}, {"name": 1, "open_at": 1, "close_at": 1, "table_size_counts": 1})
+    if restaurant is None:
+        return {"error": "Restaurant does not exist."}, 404
+
+    requested_booking = request.get_json()
+    customer_name = requested_booking['customer_name']
+    table_size = requested_booking['table_size']
+
+    if time < 0 or time > 23:
         return jsonify({"error": "Invalid time."}), 400
 
-    if requested_booking["time"] < restaurant["open_at"] or requested_booking["time"] > restaurant["close_at"]:
+    if time < restaurant["open_at"] or time > restaurant["close_at"]:
         return jsonify({"error": "Restaurant is closed."}), 400
 
-    if str(requested_booking["table_size"]) not in restaurant["table_size_counts"]:
+    if str(table_size) not in restaurant["table_size_counts"]:
         return jsonify({"error": "We do not have an appropriate table. Available table sizes: {}".format(", ".join(map(lambda s: s, restaurant["table_size_counts"])))}), 400
 
-    day = mongo.db.bookings.find_one({"restaurant_id" : ObjectId(restaurant_id), "date": requested_booking["date"]})  or { "date" : requested_booking["date"], "booked_hours" : {} }
+    bookings = mongo.db.bookings.find_one({"restaurant_id" : ObjectId(restaurant_id), "date": date})  or { "restaurant_id": ObjectId(restaurant_id), "date" : date, "booked_hours" : {} }
 
-    if str(requested_booking["time"]) not in day["booked_hours"]:
-        day["booked_hours"][str(requested_booking["time"])] = []
+    if str(time) not in bookings["booked_hours"]:
+        bookings["booked_hours"][str(time)] = []
 
-    booked_hour = day["booked_hours"][str(requested_booking["time"])]
+    booked_hour = bookings["booked_hours"][str(time)]
 
-    booked_count = len(list(filter(lambda t: t["table_size"] == requested_booking["table_size"], booked_hour)))
-    if booked_count >= restaurant["table_size_counts"][str(requested_booking["table_size"])]:
-        return jsonify({"error": "All table of size {} are booked.".format(requested_booking["table_size"])}), 400
-    booked_hour.append({"customer_name" : requested_booking["customer_name"], "table_size" : requested_booking["table_size"]})
+    booked_count = len(list(filter(lambda t: t["table_size"] == table_size, booked_hour)))
+    if booked_count >= restaurant["table_size_counts"][str(table_size)]:
+        return jsonify({"error": "All table of size {} are booked.".format(table_size)}), 400
 
-    mongo.db.bookings.replace_one({"restaurant_id" : ObjectId(restaurant_id), "date": requested_booking["date"]}, upsert=True, replacement=day)
+    if len(list(filter(lambda t: t["customer_name"] == customer_name, booked_hour))) > 0:
+        return jsonify({"error": "You are already booked for that time."}), 400
+
+    booked_hour.append({"customer_name" : customer_name, "table_size" : table_size})
+
+    mongo.db.bookings.replace_one({"restaurant_id" : ObjectId(restaurant_id), "date": date}, upsert=True, replacement=bookings)
 
     return '', 204
 
