@@ -52,7 +52,7 @@ def available_tables(restaurant_id, date, time):
 def delete_booking(restaurant_id, date, time):
     customer_name = request.args.get('customer-name')
     if customer_name is None:
-        return jsonify({"error": "customer-name is required"}), 400
+        return jsonify({"msg": "customer-name is required"}), 400
 
     mongo.db.bookings.update_one({"restaurant_id": ObjectId(restaurant_id), "date": date}, { "$pull": {"booked_hours.{}".format(time): {"customer_name" : customer_name}}} )
     return '', 204
@@ -68,14 +68,14 @@ def update_booking(restaurant_id, date, time):
 
     bookings = mongo.db.bookings.find_one({"restaurant_id": ObjectId(restaurant_id), "date": date})
     if bookings is None:
-        return jsonify({"error": "Booking does not exist"}), 404
+        return jsonify({"msg": "Booking does not exist"}), 404
 
     booked_hour = bookings["booked_hours"][str(time)]
     if booked_hour is None:
-        return jsonify({"error": "Booking does not exist"}), 404
+        return jsonify({"msg": "Booking does not exist"}), 404
 
     if len(list(filter(lambda t: t["customer_name"] == customer_name, booked_hour))) == 0:
-        return jsonify({"error": "You do not have a booking for that time."}), 400
+        return jsonify({"msg": "You do not have a booking for that time."}), 400
 
     if new_date is not None:
         bookings_for_new_date = mongo.db.bookings.find_one({"restaurant_id": ObjectId(restaurant_id), "date": new_date})
@@ -98,20 +98,20 @@ def update_booking(restaurant_id, date, time):
 def create_booking(restaurant_id, date, time):
     restaurant = mongo.db.restaurants.find_one({"_id" : ObjectId(restaurant_id)}, {"name": 1, "open_at": 1, "close_at": 1, "table_size_counts": 1})
     if restaurant is None:
-        return {"error": "Restaurant does not exist."}, 404
+        return {"msg": "Restaurant does not exist."}, 404
 
     requested_booking = request.get_json()
     customer_name = requested_booking['customer_name']
     table_size = requested_booking['table_size']
 
     if time < 0 or time > 23:
-        return jsonify({"error": "Invalid time."}), 400
+        return jsonify({"msg": "Invalid time."}), 400
 
     if time < restaurant["open_at"] or time > restaurant["close_at"]:
-        return jsonify({"error": "Restaurant is closed."}), 400
+        return jsonify({"msg": "Restaurant is closed."}), 400
 
     if str(table_size) not in restaurant["table_size_counts"]:
-        return jsonify({"error": "We do not have an appropriate table. Available table sizes: {}".format(", ".join(map(lambda s: s, restaurant["table_size_counts"])))}), 400
+        return jsonify({"msg": "We do not have an appropriate table. Available table sizes: {}".format(", ".join(map(lambda s: s, restaurant["table_size_counts"])))}), 400
 
     bookings = mongo.db.bookings.find_one({"restaurant_id" : ObjectId(restaurant_id), "date": date})  or { "restaurant_id": ObjectId(restaurant_id), "date" : date, "booked_hours" : {} }
 
@@ -122,10 +122,10 @@ def create_booking(restaurant_id, date, time):
 
     booked_count = len(list(filter(lambda t: t["table_size"] == table_size, booked_hour)))
     if booked_count >= restaurant["table_size_counts"][str(table_size)]:
-        return jsonify({"error": "All table of size {} are booked.".format(table_size)}), 400
+        return jsonify({"msg": "All table of size {} are booked.".format(table_size)}), 400
 
     if len(list(filter(lambda t: t["customer_name"] == customer_name, booked_hour))) > 0:
-        return jsonify({"error": "You are already booked for that time."}), 400
+        return jsonify({"msg": "You are already booked for that time."}), 400
 
     booked_hour.append({"customer_name" : customer_name, "table_size" : table_size})
 

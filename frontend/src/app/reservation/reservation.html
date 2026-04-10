@@ -8,22 +8,22 @@
          <label for="customer">Your full name for the reservation</label>
       </p-floatlabel>
       <div class="flex flex-col gap-1">
-         <p-datepicker (onSelect)="getAvailableSeats()" name="date" [inline]="true" [showTime]="true"
+         <p-datepicker (onSelect)="getAvailableSeats()" name="date" [inline]="true" [showTime]="true" stepMinute="60"
             #dateModel="ngModel" [(ngModel)]="date" required />
       </div>
-      <p-overlaybadge [value]="twoSeatTable()">
+      <p-overlaybadge [value]="twoSeatTable()" [severity]="twoSeatTable() == 0 ? 'danger' : 'success'">
          <div
             [style]="twoSeatSelected ? {'border': '1px solid #000 !important', 'width' : 'max-content' } : {'border' : '0px solid #000 !important', 'width' : 'max-content' }">
             <img src="/two_seats_small.png" (click)="twoSeatToggle()" />
          </div>
       </p-overlaybadge>
-      <p-overlaybadge [value]="fourSeatTable()">
+      <p-overlaybadge [value]="fourSeatTable()"  [severity]="fourSeatTable() == 0 ? 'danger' : 'success'">
          <div
             [style]="fourSeatSelected ? {'border': '1px solid #000 !important', 'width' : 'max-content' } : {'border' : '0px solid #000 !important', 'width' : 'max-content' }">
             <img src="/four_seats_small.png" (click)="fourSeatToggle()" />
          </div>
       </p-overlaybadge>
-      <p-overlaybadge [value]="tenSeatTable()">
+      <p-overlaybadge [value]="tenSeatTable()"  [severity]="fourSeatTable() == 0 ? 'danger' : 'success'">
          <div
             [style]="tenSeatSelected ? {'border': '1px solid #000 !important', 'width' : 'max-content' } : {'border' : '0px solid #000 !important', 'width' : 'max-content' }">
             <img src="/ten_seats_small.png" (click)="tenSeatToggle()" />

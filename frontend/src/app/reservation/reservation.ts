@@ -7,10 +7,11 @@ import { ButtonModule } from 'primeng/button';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
 import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-reservation',
-  imports: [DatePickerModule, FormsModule, ButtonModule, OverlayBadgeModule, InputTextModule, FloatLabelModule],
+  imports: [DatePickerModule, FormsModule, ButtonModule, OverlayBadgeModule, InputTextModule, FloatLabelModule,],
   templateUrl: './reservation.html',
   styleUrl: './reservation.css'
 })
@@ -32,9 +33,11 @@ export class Reservation {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private restaurantService = inject(RestaurantService);
+  private messageService = inject(MessageService);
 
   constructor() {
     this.restaurantId = this.route.snapshot.paramMap.get('id');
+    this.date.setMinutes(0);
   }
 
   ngOnInit() {
@@ -66,7 +69,6 @@ export class Reservation {
         restaurants.subscribe(
           {
             next: (data: any) => {
-              console.log("yo");
               this.twoSeatTable.set(data["2"]);
               this.fourSeatTable.set(data["4"]);
               this.tenSeatTable.set(data["10"]);
@@ -81,16 +83,16 @@ export class Reservation {
   }
 
   reserve() {
-    console.log("res")
     if (this.restaurantId == null) {
+      this.showError("Restaurant does not exist.")
       return;
     }
     if (this.customer == null) {
-      // TODO show error
+      this.showError("You must enter a name for your reservation")
       return;
     }
     if (this.getTableSize() == -1) {
-      // TODO show error
+      this.showError("You did not choose a table size.")
       return;
     }
     this.restaurantService.reserve(this.restaurantId, this.customer, this.date, this.getTableSize()).subscribe({
@@ -100,7 +102,7 @@ export class Reservation {
         });
       },
       error: (data: any) => {
-        console.log(data);
+        this.showError(data["error"]["msg"])
       }
     });
 
@@ -117,5 +119,10 @@ export class Reservation {
       return 10;
     }
     return -1;
+  }
+
+  
+  showError(message: string) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: message })
   }
 }

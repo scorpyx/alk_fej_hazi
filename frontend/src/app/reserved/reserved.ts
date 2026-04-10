@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { RestaurantService } from '../restaurant-service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-reserved',
@@ -20,6 +21,7 @@ export class Reserved {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private restaurantService = inject(RestaurantService);
+  private messageService = inject(MessageService);
 
   constructor() {
     this.restaurantId = this.route.snapshot.paramMap.get('id');
@@ -30,7 +32,7 @@ export class Reserved {
 
   cancel() {
     if (this.restaurantId == null || this.date == null || this.time == null || this.customer == null) {
-      // TODO
+      this.router.navigate(['/']);
       return;
     }
     this.restaurantService.cancel(this.restaurantId, this.date, this.time, this.customer).subscribe({
@@ -38,7 +40,7 @@ export class Reserved {
         this.router.navigate(['/reservation', this.restaurantId, "cancelled"]);
       },
       error: (data: any) => {
-        console.log(data);
+       this.messageService.add({ severity: 'error', summary: 'Error', detail: data["error"]["msg"] })
       }
     })
   }
