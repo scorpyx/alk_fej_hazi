@@ -10,6 +10,7 @@ COPY tsconfig.json tsconfig.json
 COPY tsconfig.spec.json tsconfig.spec.json
 
 COPY src/ src/
+COPY public/ public/
 
 RUN npm install
 RUN npm install -g @angular/cli
