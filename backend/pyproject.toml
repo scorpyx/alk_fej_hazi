@@ -1,0 +1,12 @@
+[build-system]
+requires = ["hatchling >= 1.26"]
+build-backend = "hatchling.build"
+
+[project]
+name = "restaurant_table_reservation"
+version = "0.0.1"
+dependencies = [
+	"Flask",
+	"pyuwsgi",
+    "Flask-PyMongo"
+]
