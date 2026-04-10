@@ -15,7 +15,7 @@ export class RestaurantService {
         'Content-Type': 'application/json'
       })
     };
-    return this.httpClient.get(`http://localhost:4200/restaurants`, httpOptions);
+    return this.httpClient.get(`http://localhost:8000/restaurants`, httpOptions);
   }
 
   getAvailableSeats(restaurantId: string, dateTime: Date | undefined) {
@@ -25,7 +25,7 @@ export class RestaurantService {
           'Content-Type': 'application/json'
         })
       };
-      return this.httpClient.get(`http://localhost:4200/restaurants/${restaurantId}/bookings/${dateTime.toISOString().split('T')[0]}/booked-hours/${dateTime.getHours()}/available`, httpOptions);
+      return this.httpClient.get(`http://localhost:8000/restaurants/${restaurantId}/bookings/${dateTime.toISOString().split('T')[0]}/booked-hours/${dateTime.getHours()}/available`, httpOptions);
     }
     return null;
   }
@@ -40,10 +40,10 @@ export class RestaurantService {
       "customer_name": customerName,
       "table_size": tableSize
     }
-    return this.httpClient.post(`http://localhost:4200/restaurants/${restaurantId}/bookings/${dateTime.toISOString().split('T')[0]}/booked-hours/${dateTime.getHours()}`, body, httpOptions);
+    return this.httpClient.post(`http://localhost:8000/restaurants/${restaurantId}/bookings/${dateTime.toISOString().split('T')[0]}/booked-hours/${dateTime.getHours()}`, body, httpOptions);
   }
 
   cancel(restaurantId: string, date: string, time: string, customer: string) {
-    return this.httpClient.delete(`http://localhost:4200/restaurants/${restaurantId}/bookings/${date}/booked-hours/${time}?customer-name=${customer}`);
+    return this.httpClient.delete(`http://localhost:8000/restaurants/${restaurantId}/bookings/${date}/booked-hours/${time}?customer-name=${customer}`);
   }
 }

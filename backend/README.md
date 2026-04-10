@@ -13,4 +13,4 @@ docker run --network=my-net --name mongo -d mongo:noble
 
 ## Restaurant image futtatása
 
-docker run --network=my-net -p 8000:8000 --name restaurant -d scorpyx/restaurant:v1
+docker run --network=my-net --name restaurant -d scorpyx/restaurant:v1

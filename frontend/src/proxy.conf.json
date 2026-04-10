@@ -1,6 +1,6 @@
 {
   "/restaurants": {
-    "target": "http://localhost:5000",
+    "target": "http://restaurant:8000",
     "secure": false
   }
 }
